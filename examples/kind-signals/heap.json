@@ -1,0 +1,15 @@
+{
+  "symptom": "Investigate pod health",
+  "records": [
+    {
+      "id": "E1",
+      "source": "pod.phase",
+      "text": "Running"
+    },
+    {
+      "id": "E2",
+      "source": "container.status",
+      "text": "OOMKilled; exitCode=137"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "symptom": "Investigate pod health",
+  "records": [
+    {
+      "id": "E1",
+      "source": "pod.phase",
+      "text": "Pending"
+    },
+    {
+      "id": "E8",
+      "source": "event",
+      "text": "ImagePullBackOff"
+    }
+  ]
+}

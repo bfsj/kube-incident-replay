@@ -1,0 +1,129 @@
+[
+  {
+    "case": "restart-01",
+    "scope": "first-record",
+    "diagnosis": "oom",
+    "citations": [
+      "E1"
+    ],
+    "reads": 1,
+    "correct": true,
+    "cites_decisive": false
+  },
+  {
+    "case": "restart-01",
+    "scope": "all-records",
+    "diagnosis": "oom",
+    "citations": [
+      "E2"
+    ],
+    "reads": 1,
+    "correct": true,
+    "cites_decisive": true
+  },
+  {
+    "case": "restart-02",
+    "scope": "first-record",
+    "diagnosis": "oom",
+    "citations": [
+      "E1"
+    ],
+    "reads": 1,
+    "correct": false,
+    "cites_decisive": false
+  },
+  {
+    "case": "restart-02",
+    "scope": "all-records",
+    "diagnosis": "oom",
+    "citations": [
+      "E2"
+    ],
+    "reads": 1,
+    "correct": false,
+    "cites_decisive": true
+  },
+  {
+    "case": "pending-01",
+    "scope": "first-record",
+    "diagnosis": "image_pull",
+    "citations": [
+      "E1"
+    ],
+    "reads": 1,
+    "correct": true,
+    "cites_decisive": false
+  },
+  {
+    "case": "pending-01",
+    "scope": "all-records",
+    "diagnosis": "oom",
+    "citations": [
+      "E2"
+    ],
+    "reads": 1,
+    "correct": false,
+    "cites_decisive": true
+  },
+  {
+    "case": "pending-02",
+    "scope": "first-record",
+    "diagnosis": "image_pull",
+    "citations": [
+      "E1"
+    ],
+    "reads": 1,
+    "correct": false,
+    "cites_decisive": false
+  },
+  {
+    "case": "pending-02",
+    "scope": "all-records",
+    "error": "A conclusion needs citations from evidence actually read",
+    "correct": false
+  },
+  {
+    "case": "restart-03",
+    "scope": "first-record",
+    "diagnosis": "oom",
+    "citations": [
+      "E1"
+    ],
+    "reads": 1,
+    "correct": false,
+    "cites_decisive": false
+  },
+  {
+    "case": "restart-03",
+    "scope": "all-records",
+    "diagnosis": "oom",
+    "citations": [
+      "E2"
+    ],
+    "reads": 1,
+    "correct": false,
+    "cites_decisive": false
+  },
+  {
+    "case": "restart-04",
+    "scope": "first-record",
+    "diagnosis": "oom",
+    "citations": [
+      "E1"
+    ],
+    "reads": 1,
+    "correct": false,
+    "cites_decisive": false
+  },
+  {
+    "case": "restart-04",
+    "scope": "all-records",
+    "diagnosis": "oom",
+    "citations": [
+      "E2"
+    ],
+    "reads": 1,
+    "correct": false,
+    "cites_decisive": false
+  }
+]

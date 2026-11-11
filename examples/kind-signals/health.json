@@ -1,0 +1,15 @@
+{
+  "symptom": "Investigate pod health",
+  "records": [
+    {
+      "id": "E1",
+      "source": "pod.phase",
+      "text": "Running"
+    },
+    {
+      "id": "E9",
+      "source": "event",
+      "text": "failed liveness probe, will be restarted"
+    }
+  ]
+}

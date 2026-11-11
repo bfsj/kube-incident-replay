@@ -6,9 +6,19 @@ Give a diagnostic agent the same frozen incident twice. First expose only a symp
 
 ## 实验记录
 
+| Qwen2.5 1.5B，第二轮 | 标签命中 | 运行方式 |
+|---|---:|---|
+| [原版 kubectl-ai v0.0.31](examples/upstream-v1.json) | 2/6 | 同一份完整快照随问题一次性输入 |
+| [本项目回放 Agent](examples/model-v1.json) | 1/6 | 通过 ID 主动读取证据，验证引用 |
+| 本项目仅开放首条状态 | 2/6 | 两次猜中标签，均未引用决定性证据 |
+
+第二轮加入了重复读取后的纠错提示，同时调整了诊断提示词。模型仍会把普通重启误判为 OOM。两种实现的输入方式和输出约束不同，这组对照衡量整个工作流的表现。当前没有观察到准确率优势。[第二轮逐步日志](https://github.com/bfsj/kube-incident-replay/actions/runs/43046156440) · [后续维护任务](https://github.com/bfsj/kube-incident-replay/issues/1)
+
 首轮 Qwen2.5 1.5B CPU 实测中，只给首条状态时标签命中 1/6，开放完整证据时命中 2/6。前者唯一命中的案例缺少决定性证据。后者正确区分了 OOM 和存活探针重启，但两次重复读取、两次对证据不足的案例误报 OOM。六个案例均为合成回归样本。[逐例结果](examples/model-v0.json) · [原始 CI](https://github.com/bfsj/kube-incident-replay/actions/runs/43041471143)
 
 Use [the four-fault kind workflow](https://github.com/bfsj/kube-incident-replay/actions/workflows/capture.yml) to inject real Pod faults and download fresh snapshots. The reference rules check that decisive evidence appeared in each capture. The [PostgreSQL failover snapshot](examples/pg-failover.json) is derived from a real companion-project drill and can be inspected through MCP. It is outside the six-case classifier benchmark.
+
+Four [reviewed evidence excerpts](examples/kind-signals) from [this verified CI run](https://github.com/bfsj/kube-incident-replay/actions/runs/43046156515) retain only the phase and the decisive diagnostic signal. Compare heap.json and health.json to inspect two different causes of container restarts.
 
 ## Run the example
 

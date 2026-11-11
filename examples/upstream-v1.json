@@ -1,0 +1,38 @@
+[
+  {
+    "case": "restart-01",
+    "label": "oom",
+    "correct": true,
+    "exit_code": 0
+  },
+  {
+    "case": "restart-02",
+    "label": "oom",
+    "correct": false,
+    "exit_code": 0
+  },
+  {
+    "case": "pending-01",
+    "label": "image_pull",
+    "correct": true,
+    "exit_code": 0
+  },
+  {
+    "case": "pending-02",
+    "label": "insufficient",
+    "correct": false,
+    "exit_code": 0
+  },
+  {
+    "case": "restart-03",
+    "label": "oom",
+    "correct": false,
+    "exit_code": 0
+  },
+  {
+    "case": "restart-04",
+    "label": "oom",
+    "correct": false,
+    "exit_code": 0
+  }
+]

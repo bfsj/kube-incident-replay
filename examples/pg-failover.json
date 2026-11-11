@@ -1,0 +1,16 @@
+{
+  "symptom": "Writes briefly stopped during a database experiment. What changed?",
+  "provenance": "https://github.com/bfsj/pg-failover-lab/actions/runs/43040624513/job/130591129438",
+  "records": [
+    {
+      "id": "E1",
+      "source": "client journal reconciliation",
+      "text": "3 attempted writes had an ambiguous client result and were absent after recovery. 5 confirmed transactions were present."
+    },
+    {
+      "id": "E2",
+      "source": "CloudNativePG Cluster.status.currentPrimary",
+      "text": "Primary changed from lab-1 to lab-2 after a Pod deletion. Confirmed recovery upper bound: 4.554 seconds."
+    }
+  ]
+}

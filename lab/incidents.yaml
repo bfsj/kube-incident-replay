@@ -1,0 +1,50 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: heap
+spec:
+  restartPolicy: Always
+  containers:
+    - name: worker
+      image: python:3.12-alpine
+      command: [python, -c, "x=bytearray(128*1024*1024)"]
+      resources:
+        limits:
+          memory: 48Mi
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: health
+spec:
+  terminationGracePeriodSeconds: 1
+  containers:
+    - name: worker
+      image: busybox:1.36
+      command: [sleep, "3600"]
+      livenessProbe:
+        exec:
+          command: ["false"]
+        periodSeconds: 2
+        failureThreshold: 1
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: fetch
+spec:
+  containers:
+    - name: worker
+      image: registry.invalid/incident-demo/missing:1
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: queue
+spec:
+  containers:
+    - name: worker
+      image: busybox:1.36
+      resources:
+        requests:
+          cpu: "1000"

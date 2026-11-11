@@ -2,7 +2,7 @@ name: Local model benchmark
 on:
   workflow_dispatch:
   push:
-    paths: ['replay.py', 'fixtures/**', '.github/workflows/model.yml']
+    paths: ['replay.py', 'fixtures/**', 'upstream/**', '.github/workflows/model.yml']
 permissions:
   contents: read
 jobs:
@@ -21,7 +21,7 @@ jobs:
           curl -fsS http://localhost:11434/api/tags > models.json
       - name: Score complete and restricted evidence
         run: |
-          python replay.py --engine model > model-report.json || report_status=$?
+          python replay.py --engine model > model-report.json || test -s model-report.json
           python - <<'PY'
           import json, os
           rows = json.load(open("model-report.json"))
@@ -36,6 +36,13 @@ jobs:
           if all("error" in row for row in rows):
               raise SystemExit("Every trial failed")
           PY
+      - name: Compare stock kubectl-ai on the same six full snapshots
+        run: |
+          curl -fsSL --retry 3 https://github.com/GoogleCloudPlatform/kubectl-ai/releases/download/v0.0.31/kubectl-ai_Linux_x86_64.tar.gz -o /tmp/kubectl-ai.tgz
+          echo '872ef891232b01772c46a54b1866b383e043100e3806835158187c603eb490d1  /tmp/kubectl-ai.tgz' | sha256sum -c -
+          tar xzf /tmp/kubectl-ai.tgz -C upstream kubectl-ai
+          python upstream/compare.py | tee upstream-report.json
+        shell: bash
       - if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -43,3 +50,4 @@ jobs:
           path: |
             model-report.json
             models.json
+            upstream-report.json

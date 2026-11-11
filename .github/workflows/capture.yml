@@ -1,0 +1,25 @@
+name: Capture four Kubernetes faults
+on:
+  workflow_dispatch:
+  push:
+    paths: ['capture.py', 'lab/**', '.github/workflows/capture.yml']
+permissions:
+  contents: read
+jobs:
+  inject:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: helm/kind-action@v1
+        with:
+          cluster_name: replay
+      - run: |
+          kubectl --context kind-replay create namespace incident-lab
+          kubectl --context kind-replay -n incident-lab apply -f lab/incidents.yaml
+          python lab/verify.py
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pod-snapshots
+          path: captures/

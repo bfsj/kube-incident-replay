@@ -4,6 +4,12 @@ Give a diagnostic agent the same frozen incident twice. First expose only a symp
 
 [Local model benchmark](https://github.com/bfsj/kube-incident-replay/actions/workflows/model.yml) · [MCP transport tests](https://github.com/bfsj/kube-incident-replay/actions/workflows/replay.yml)
 
+## 实验记录
+
+首轮 Qwen2.5 1.5B CPU 实测中，只给首条状态时标签命中 1/6，开放完整证据时命中 2/6。前者唯一命中的案例缺少决定性证据。后者正确区分了 OOM 和存活探针重启，但两次重复读取、两次对证据不足的案例误报 OOM。六个案例均为合成回归样本。[逐例结果](examples/model-v0.json) · [原始 CI](https://github.com/bfsj/kube-incident-replay/actions/runs/43041471143)
+
+Use [the four-fault kind workflow](https://github.com/bfsj/kube-incident-replay/actions/workflows/capture.yml) to inject real Pod faults and download fresh snapshots. The reference rules check that decisive evidence appeared in each capture. The [PostgreSQL failover snapshot](examples/pg-failover.json) is derived from a real companion-project drill and can be inspected through MCP. It is outside the six-case classifier benchmark.
+
 ## Run the example
 
 ```sh

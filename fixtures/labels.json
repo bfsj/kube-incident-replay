@@ -1,0 +1,34 @@
+{
+  "restart-01": [
+    "oom",
+    [
+      "E2"
+    ]
+  ],
+  "restart-02": [
+    "liveness",
+    [
+      "E2"
+    ]
+  ],
+  "pending-01": [
+    "image_pull",
+    [
+      "E2"
+    ]
+  ],
+  "pending-02": [
+    "scheduling",
+    [
+      "E2"
+    ]
+  ],
+  "restart-03": [
+    "insufficient",
+    []
+  ],
+  "restart-04": [
+    "insufficient",
+    []
+  ]
+}

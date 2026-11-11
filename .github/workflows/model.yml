@@ -1,0 +1,45 @@
+name: Local model benchmark
+on:
+  workflow_dispatch:
+  push:
+    paths: ['replay.py', 'fixtures/**', '.github/workflows/model.yml']
+permissions:
+  contents: read
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      MODEL_NAME: qwen2.5:1.5b
+    steps:
+      - uses: actions/checkout@v4
+      - name: Start CPU inference server
+        run: |
+          docker run -d --name replay-model -p 127.0.0.1:11434:11434 ollama/ollama:0.13.5
+          for i in {1..60}; do curl -fsS http://localhost:11434/api/version && break; sleep 2; done
+          docker exec replay-model ollama pull "$MODEL_NAME"
+          curl -fsS http://localhost:11434/api/tags > models.json
+      - name: Score complete and restricted evidence
+        run: |
+          python replay.py --engine model > model-report.json || report_status=$?
+          python - <<'PY'
+          import json, os
+          rows = json.load(open("model-report.json"))
+          with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as out:
+              for scope in ("first-record", "all-records"):
+                  group = [r for r in rows if r["scope"] == scope]
+                  score = sum(r["correct"] for r in group)
+                  errors = sum("error" in r for r in group)
+                  print(f"- {scope}: {score}/{len(group)} correct; {errors} invalid runs", file=out)
+          print(json.dumps(rows, indent=2))
+          # Invalid model decisions are measured outcomes; transport failures are not.
+          if all("error" in row for row in rows):
+              raise SystemExit("Every trial failed")
+          PY
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: local-model-report
+          path: |
+            model-report.json
+            models.json

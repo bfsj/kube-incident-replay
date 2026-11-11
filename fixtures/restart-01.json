@@ -1,0 +1,15 @@
+{
+  "symptom": "Container keeps restarting",
+  "records": [
+    {
+      "id": "E1",
+      "source": "pod.summary",
+      "text": "CrashLoopBackOff"
+    },
+    {
+      "id": "E2",
+      "source": "container.lastState",
+      "text": "reason=OOMKilled; exitCode=137"
+    }
+  ]
+}

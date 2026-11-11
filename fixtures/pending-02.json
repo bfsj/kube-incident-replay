@@ -1,0 +1,15 @@
+{
+  "symptom": "Pod never becomes ready",
+  "records": [
+    {
+      "id": "E1",
+      "source": "pod.summary",
+      "text": "Pending"
+    },
+    {
+      "id": "E2",
+      "source": "event",
+      "text": "0/1 nodes are available: 1 Insufficient cpu"
+    }
+  ]
+}

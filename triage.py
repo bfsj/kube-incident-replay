@@ -83,10 +83,10 @@ def triage(case, reply=None, max_reads=12):
         diagnosis, citations = next(iter(hits.items()))
     check = None
     if diagnosis == "insufficient":
-        if remaining:
-            check = "Continue the replay with a larger read budget; unread evidence remains."
-        elif len(hits) > 1:
+        if len(hits) > 1:
             check = "Correlate container names and event timestamps to separate conflicting causes."
+        elif remaining:
+            check = "Continue the replay with a larger read budget; unread evidence remains."
         else:
             check = next_check(observed)
     return {"diagnosis": diagnosis, "citations": citations, "next_check": check, "trace": trace}

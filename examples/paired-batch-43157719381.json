@@ -1,0 +1,37 @@
+{
+  "run": "https://github.com/bfsj/kube-incident-replay/actions/runs/43157719381",
+  "commit": "67997e5",
+  "model": "qwen2.5:1.5b",
+  "summary": {
+    "model-v1": {
+      "pairs": 4,
+      "paired_success": 0,
+      "full_supported": 0,
+      "masked_abstained": 0,
+      "masked_unsupported": 4,
+      "invalid_trials": 1,
+      "mean_reads": 2.75,
+      "mean_model_calls": 4
+    },
+    "model-with-gate": {
+      "pairs": 4,
+      "paired_success": 4,
+      "full_supported": 4,
+      "masked_abstained": 4,
+      "masked_unsupported": 0,
+      "invalid_trials": 0,
+      "mean_reads": 7,
+      "mean_model_calls": 6
+    },
+    "source-order": {
+      "pairs": 4,
+      "paired_success": 4,
+      "full_supported": 4,
+      "masked_abstained": 4,
+      "masked_unsupported": 0,
+      "invalid_trials": 0,
+      "mean_reads": 7,
+      "mean_model_calls": 0
+    }
+  }
+}

@@ -2,6 +2,16 @@
 
 ## Evidence-gated triage
 
+**四对真实故障快照的实测**。每对由同一 Pod 的完整现场和缺失关键证据的现场组成。完整侧必须命中注入故障并引用决定性记录，缺证据侧必须拒答。
+
+| 流程 | 成对通过 | 缺证据时误诊 | 每次平均读证据数 | 每次平均模型调用 |
+|---|---:|---:|---:|---:|
+| 旧版 Qwen2.5 1.5B 流程 | 0/4 | 4/4 | 2.75 | 4 |
+| 模型选取证顺序 + 规则校验 | 4/4 | 0/4 | 7 | 6 |
+| 固定取证顺序 + 同一校验 | 4/4 | 0/4 | 7 | 0 |
+
+规则覆盖了这四种已知信号。模型规划在本批次增加了调用次数，准确性与固定顺序一致。旧流程另有一次输出无效，已计入失败。[实测汇总](examples/paired-batch-43157719381.json) · [逐例评测产物](https://github.com/bfsj/kube-incident-replay/actions/runs/43157719381)
+
 Run `python triage.py fixtures/restart-01.json` for an OOM example and `python triage.py fixtures/restart-03.json` for an unexplained restart. The output records the inspected evidence IDs, supported diagnosis and next evidence to collect. The read-only MCP tool `triage_snapshot` exposes the same source-order policy. Add `--planner model` to the CLI to let the configured model select the next evidence ID. The verifier checks structured container state and Kubernetes event signatures for four supported causes. Conflicting signals or an exhausted diagnostic read budget trigger abstention.
 
 Run `python paired.py examples/kind-signals` for the development regression. The [paired evaluation workflow](https://github.com/bfsj/kube-incident-replay/actions/workflows/paired.yml) injects a fresh batch of four faults in kind. Each Pod produces a complete snapshot and one with cause-bearing reasons withheld. The masked variant preserves record IDs, sources, Pod phase, restart counts, exit codes and ordinary lifecycle events when available. A pair succeeds when the complete diagnosis cites a decisive record and the masked trial abstains. The workflow compares the previous model loop, the model planner with the verifier, and a model-free control. The held-out batch repeats known fault types. The score measures behavior on those signals and this masking regime.

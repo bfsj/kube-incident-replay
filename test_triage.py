@@ -24,6 +24,8 @@ class TriageTests(unittest.TestCase):
         case["records"].append({"id": "E3", "source": "event",
                                 "text": "failed liveness probe, will be restarted"})
         self.assertIn("conflicting", triage(case)["next_check"])
+        case["records"].append({"id": "E4", "source": "pod.phase", "text": "Running"})
+        self.assertIn("conflicting", triage(case)["next_check"])
         self.assertIn("budget", triage(case, max_reads=1)["next_check"])
 
     def test_negative_and_wrong_source(self):

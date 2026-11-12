@@ -10,10 +10,38 @@ from triage import triage
 EXPECTED = {"heap": "oom", "health": "liveness", "fetch": "image_pull", "queue": "scheduling"}
 
 
+def incomplete_text(record):
+    if record["source"] in ("pod.phase", "pod.summary"):
+        return record["text"]
+    try:
+        data = json.loads(record["text"])
+    except ValueError:
+        data = {}
+    if not isinstance(data, dict):
+        return "[unavailable]"
+    if record["source"] == "container.status":
+        context = {"restartCount": data.get("restartCount")}
+        for key in ("state", "lastState"):
+            state = data.get(key) or {}
+            if "terminated" in state:
+                context[key] = {"terminated": {"exitCode": state["terminated"].get("exitCode")}}
+            elif "running" in state:
+                context[key] = {"running": {}}
+            elif "waiting" in state:
+                context[key] = {"waiting": {}}
+        return json.dumps(context)
+    if record["source"] == "event":
+        reason = data.get("reason")
+        if reason in ("Scheduled", "Created", "Started", "Pulled", "Pulling"):
+            return json.dumps({"reason": reason})
+        if reason == "Unhealthy" and data.get("message", "").startswith("Readiness probe failed"):
+            return "Readiness probe failed"
+    return "[unavailable]"
+
+
 def variants(case):
-    # Preserve availability and record IDs. Keep the Pod phase on the masked side.
-    masked = [{**r, "text": r["text"] if r["source"] == "pod.phase" else "[unavailable]"}
-              for r in case["records"]]
+    # Preserve symptoms and lifecycle context; withhold cause-bearing reasons/messages.
+    masked = [{**r, "text": incomplete_text(r)} for r in case["records"]]
     return {"full": case, "masked": {**case, "records": masked}}
 
 

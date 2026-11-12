@@ -32,3 +32,12 @@ class TriageTests(unittest.TestCase):
                              ("event", '{"reason":"Unhealthy","message":"Readiness probe failed"}')]:
             with self.subTest(text=text):
                 self.assertFalse(supported({"source": source, "text": text}))
+
+    def test_mask_preserves_ambiguous_exit_code_and_restart_count(self):
+        case = {"records": [{"id": "E1", "source": "container.status", "text":
+                '{"state":{"terminated":{"exitCode":137,"reason":"OOMKilled"}},"restartCount":2}'}]}
+        masked = variants(case)["masked"]["records"][0]
+        self.assertIn("137", masked["text"])
+        self.assertIn('"restartCount": 2', masked["text"])
+        self.assertNotIn("OOMKilled", masked["text"])
+        self.assertFalse(supported(masked))

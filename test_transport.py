@@ -22,5 +22,8 @@ class TransportTest(unittest.IsolatedAsyncioTestCase):
                 self.assertIn("E2", listing.content[0].text)
                 record = await session.call_tool("read_evidence", {"record_id": "E2"})
                 self.assertIn("OOMKilled", record.content[0].text)
+                diagnosis = await session.call_tool("triage_snapshot", {})
+                self.assertFalse(diagnosis.isError)
+                self.assertIn("oom", diagnosis.content[0].text)
                 invalid = await session.call_tool("read_evidence", {"record_id": "../labels.json"})
                 self.assertTrue(invalid.isError)

@@ -3,6 +3,7 @@ import argparse
 from pathlib import Path
 from mcp.server.fastmcp import FastMCP
 from replay import evidence, inventory, snapshot
+from triage import triage
 
 
 def make_server(case):
@@ -20,6 +21,11 @@ def make_server(case):
             return evidence(case, record_id)
         except StopIteration:
             raise ValueError("Unknown evidence ID") from None
+
+    @server.tool()
+    def triage_snapshot(max_reads: int = 12) -> dict:
+        """Check Pod failure signals, cite evidence, and suggest missing checks."""
+        return triage(case, max_reads=max_reads)
 
     return server
 

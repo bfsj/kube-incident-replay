@@ -1,0 +1,40 @@
+name: Paired diagnosis and abstention
+on:
+  workflow_dispatch:
+  push:
+    paths: ['triage.py', 'paired.py', 'lab/**', 'capture.py', 'replay.py', '.github/workflows/paired.yml']
+permissions:
+  contents: read
+jobs:
+  held-out-batch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      MODEL_NAME: qwen2.5:1.5b
+    steps:
+      - uses: actions/checkout@v4
+      - run: python -m unittest -v test_triage
+      - uses: helm/kind-action@v1
+        with:
+          cluster_name: replay
+      - name: Generate a fresh test batch
+        run: |
+          kubectl --context kind-replay create namespace incident-lab
+          kubectl --context kind-replay -n incident-lab apply -f lab/incidents.yaml
+          python lab/verify.py
+      - name: Start pinned Ollama server
+        run: |
+          docker run -d --name paired-model -p 127.0.0.1:11434:11434 ollama/ollama:0.13.5
+          for i in {1..60}; do curl -fsS http://localhost:11434/api/version && break; sleep 2; done
+          docker exec paired-model ollama pull "$MODEL_NAME"
+          curl -fsS http://localhost:11434/api/tags > models.json
+      - name: Score original agent, evidence gate and model-free control
+        run: |
+          python paired.py captures --model > paired-report.json
+          python -c "import json; print(json.dumps(json.load(open('paired-report.json'))['summary']))"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: paired-evaluation
+          path: |
+            paired-report.json
+            models.json

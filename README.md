@@ -1,5 +1,11 @@
 # Kube Incident Replay
 
+## Evidence-gated triage
+
+Run `python triage.py fixtures/restart-01.json` for an OOM example and `python triage.py fixtures/restart-03.json` for an unexplained restart. The output records the inspected evidence IDs, supported diagnosis and next evidence to collect. The read-only MCP tool `triage_snapshot` exposes the same source-order policy. Add `--planner model` to the CLI to let the configured model select the next evidence ID. The verifier checks structured container state and Kubernetes event signatures for four supported causes. Conflicting signals or an exhausted diagnostic read budget trigger abstention.
+
+Run `python paired.py examples/kind-signals` for the development regression. The [paired evaluation workflow](https://github.com/bfsj/kube-incident-replay/actions/workflows/paired.yml) injects a fresh batch of four faults in kind. Each Pod produces a complete snapshot and one with every record except phase masked, preserving IDs and sources. A pair succeeds when the complete diagnosis cites a decisive record and the masked trial abstains. The workflow compares the previous model loop, the model planner with the verifier, and a model-free control. The held-out batch repeats known fault types. The score measures behavior on those signals and this masking regime.
+
 Give a diagnostic agent the same frozen incident twice. First expose only a symptom, then let it fetch events and termination records by ID. Compare its root cause, citations and willingness to stop when evidence is missing.
 
 [Local model benchmark](https://github.com/bfsj/kube-incident-replay/actions/workflows/model.yml) · [MCP transport tests](https://github.com/bfsj/kube-incident-replay/actions/workflows/replay.yml)
@@ -51,7 +57,7 @@ servers:
     args: [/absolute/path/to/server.py, /absolute/path/to/fixtures/restart-01.json]
 ```
 
-The adapter exposes exactly two read-only tools for a single frozen snapshot. kubectl-ai also supplies its own built-in tools; use the standalone replay driver above for controlled benchmark comparisons. [Upstream kubectl-ai documentation](https://github.com/GoogleCloudPlatform/kubectl-ai#mcp-client-mode)
+The adapter exposes three read-only tools for a single frozen snapshot. kubectl-ai also supplies its own built-in tools. Use the standalone replay driver for controlled benchmark comparisons. [Upstream kubectl-ai documentation](https://github.com/GoogleCloudPlatform/kubectl-ai#mcp-client-mode)
 
 ## Capture another incident
 

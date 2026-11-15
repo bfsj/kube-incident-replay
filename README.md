@@ -1,5 +1,9 @@
 # Kube Incident Replay
 
+[![Regression status](https://github.com/bfsj/kube-incident-replay/actions/workflows/paired.yml/badge.svg?branch=main)](https://github.com/bfsj/kube-incident-replay/actions/workflows/paired.yml)
+
+默认分支按新加坡时间每周二 09:17安排一次回归，也可以从 [Actions 页面](https://github.com/bfsj/kube-incident-replay/actions/workflows/paired.yml) 手动运行。每次重新注入四种 Pod 故障，比较旧模型、模型取证加规则校验、固定顺序加规则校验。后两组应在四种已支持故障上同时通过完整与缺证据案例。失败时打开运行摘要，下载 `paired-evaluation`，按 `case` 与 `variant` 找到失败记录，保存最小复现并补回归测试。下一项实验是限制读取预算，比较两种取证顺序的诊断质量与调用成本。
+
 ## Evidence-gated triage
 
 **四对真实故障快照的实测**。每对由同一 Pod 的完整现场和缺失关键证据的现场组成。完整侧必须命中注入故障并引用决定性记录，缺证据侧必须拒答。

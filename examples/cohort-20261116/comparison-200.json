@@ -1,0 +1,67 @@
+{
+  "selection": "batches 1 through 50",
+  "prior": {
+    "model-v1": {
+      "pairs": 208,
+      "paired_success": 0,
+      "full_supported": 11,
+      "masked_abstained": 15,
+      "masked_unsupported": 181,
+      "invalid_trials": 65,
+      "mean_reads": 4.427884615384615,
+      "mean_model_calls": 5.733173076923077
+    },
+    "model-with-gate": {
+      "pairs": 208,
+      "paired_success": 208,
+      "full_supported": 208,
+      "masked_abstained": 208,
+      "masked_unsupported": 0,
+      "invalid_trials": 0,
+      "mean_reads": 6.918269230769231,
+      "mean_model_calls": 5.918269230769231
+    },
+    "source-order": {
+      "pairs": 208,
+      "paired_success": 208,
+      "full_supported": 208,
+      "masked_abstained": 208,
+      "masked_unsupported": 0,
+      "invalid_trials": 0,
+      "mean_reads": 6.918269230769231,
+      "mean_model_calls": 0.0
+    }
+  },
+  "current": {
+    "model-v1": {
+      "pairs": 200,
+      "paired_success": 0,
+      "full_supported": 9,
+      "masked_abstained": 13,
+      "masked_unsupported": 176,
+      "invalid_trials": 62,
+      "mean_reads": 4.335,
+      "mean_model_calls": 5.6375
+    },
+    "model-with-gate": {
+      "pairs": 200,
+      "paired_success": 200,
+      "full_supported": 200,
+      "masked_abstained": 200,
+      "masked_unsupported": 0,
+      "invalid_trials": 0,
+      "mean_reads": 6.915,
+      "mean_model_calls": 5.915
+    },
+    "source-order": {
+      "pairs": 200,
+      "paired_success": 200,
+      "full_supported": 200,
+      "masked_abstained": 200,
+      "masked_unsupported": 0,
+      "invalid_trials": 0,
+      "mean_reads": 6.915,
+      "mean_model_calls": 0.0
+    }
+  }
+}

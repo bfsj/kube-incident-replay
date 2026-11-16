@@ -1,0 +1,23 @@
+name: Independent Pod cohort
+on: workflow_dispatch
+permissions:
+  contents: read
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        cluster: [1,2,3,4,5,6,7,8]
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: helm/kind-action@v1
+        with:
+          cluster_name: replay
+      - run: kubectl --context kind-replay create namespace incident-lab
+      - run: python lab/cohort.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cohort-${{ matrix.cluster }}
+          path: cohort.json

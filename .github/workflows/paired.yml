@@ -1,5 +1,10 @@
 name: Paired diagnosis and abstention
 on:
+  workflow_call:
+    inputs:
+      artifact_name:
+        type: string
+        default: paired-evaluation
   schedule:
     - cron: '17 1 * * 2'
   workflow_dispatch:
@@ -40,7 +45,7 @@ jobs:
       - if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: paired-evaluation
+          name: ${{ inputs.artifact_name || 'paired-evaluation' }}
           path: |
             paired-report.json
             models.json

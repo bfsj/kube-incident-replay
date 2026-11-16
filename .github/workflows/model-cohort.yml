@@ -1,0 +1,44 @@
+name: Paired model cohort
+on: workflow_dispatch
+permissions:
+  contents: read
+jobs:
+  batch:
+    strategy:
+      fail-fast: false
+      max-parallel: 10
+      matrix:
+        index: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52]
+    uses: ./.github/workflows/paired.yml
+    with:
+      artifact_name: paired-${{ matrix.index }}
+  aggregate:
+    needs: batch
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: paired-*
+          path: batches
+      - run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          reports={p.parent.name: json.loads(p.read_text())["summary"] for p in Path("batches").glob("*/paired-report.json")}
+          totals={}
+          for report in reports.values():
+              for engine, row in report.items():
+                  accum=totals.setdefault(engine, {})
+                  for key,value in row.items():
+                      accum[key]=accum.get(key,0)+value
+          for row in totals.values():
+              for key in ("mean_reads","mean_model_calls"):
+                  row[key] /= len(reports)
+          print("MODEL_TOTAL="+json.dumps(totals))
+          Path("cohort.json").write_text(json.dumps(reports))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: model-cohort-summary
+          path: cohort.json

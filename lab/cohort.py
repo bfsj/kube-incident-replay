@@ -14,11 +14,17 @@ def kubectl(*args, payload=None):
     return subprocess.run(["kubectl","--context","kind-replay","-n","incident-lab",*args],
                           input=payload,text=True,capture_output=True,check=True).stdout
 
-template = json.loads(kubectl("create","--dry-run=client","-f","lab/incidents.yaml","-o","json"))
+payload = kubectl("create","--dry-run=client","-f","lab/incidents.yaml","-o","json").strip()
+templates = []
+decoder = json.JSONDecoder()
+while payload:
+    item, end = decoder.raw_decode(payload)
+    templates.extend(item.get("items", [item]))
+    payload = payload[end:].lstrip()
 pods = []
 truth = {}
 for rep in range(7):
-    for example in template["items"]:
+    for example in templates:
         pod=json.loads(json.dumps(example))
         name=pod["metadata"]["name"]
         key=f"{name}-{rep}"

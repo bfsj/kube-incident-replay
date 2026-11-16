@@ -1,0 +1,75 @@
+{
+  "models": {
+    "model-v1": {
+      "pairs": 208.0,
+      "paired_success": 0.0,
+      "full_supported": 11.0,
+      "masked_abstained": 15.0,
+      "masked_unsupported": 181.0,
+      "invalid_trials": 65.0,
+      "mean_reads": 4.427884615384615,
+      "mean_model_calls": 5.733173076923077
+    },
+    "model-with-gate": {
+      "pairs": 208.0,
+      "paired_success": 208.0,
+      "full_supported": 208.0,
+      "masked_abstained": 208.0,
+      "masked_unsupported": 0.0,
+      "invalid_trials": 0.0,
+      "mean_reads": 6.918269230769231,
+      "mean_model_calls": 5.918269230769231
+    },
+    "source-order": {
+      "pairs": 208.0,
+      "paired_success": 208.0,
+      "full_supported": 208.0,
+      "masked_abstained": 208.0,
+      "masked_unsupported": 0.0,
+      "invalid_trials": 0.0,
+      "mean_reads": 6.918269230769231,
+      "mean_model_calls": 0.0
+    }
+  },
+  "fixed_age": {
+    "image_pull": {
+      "pairs": 56,
+      "passed": 56,
+      "full_labels": {
+        "image_pull": 56
+      }
+    },
+    "liveness": {
+      "pairs": 56,
+      "passed": 56,
+      "full_labels": {
+        "liveness": 56
+      }
+    },
+    "oom": {
+      "pairs": 56,
+      "passed": 55,
+      "full_labels": {
+        "oom": 55,
+        "insufficient": 1
+      }
+    },
+    "scheduling": {
+      "pairs": 56,
+      "passed": 56,
+      "full_labels": {
+        "scheduling": 56
+      }
+    }
+  },
+  "synthetic_full": {
+    "total": 16,
+    "correct": 12,
+    "failed": [
+      "image-first-failure",
+      "image-repository-missing",
+      "scheduler-memory",
+      "scheduler-taint"
+    ]
+  }
+}
